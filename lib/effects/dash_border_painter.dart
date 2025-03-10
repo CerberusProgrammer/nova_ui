@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 /// Painter for animated dashed border effect
 class DashedBorderPainter extends CustomPainter {
