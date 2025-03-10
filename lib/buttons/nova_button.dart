@@ -141,7 +141,7 @@ class NovaButton extends StatefulWidget {
     this.isLoading = false,
     this.soundEffects = false,
     this.bootAnimation = true,
-    this.idleAnimations = true,
+    this.idleAnimations = false,
     this.borderWidth,
     this.borderRadius,
     this.glowIntensity,
