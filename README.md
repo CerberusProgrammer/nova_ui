@@ -150,5 +150,3 @@ This means you can use it freely in personal and commercial projects! 🎉
   <br>
   <b>SYSTEM STATUS: ONLINE</b>
 </p>
-
-Similar code found with 1 license type
