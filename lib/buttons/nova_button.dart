@@ -141,7 +141,7 @@ class NovaButton extends StatefulWidget {
     this.isLoading = false,
     this.soundEffects = false,
     this.bootAnimation = true,
-    this.idleAnimations = false,
+    this.idleAnimations = true,
     this.borderWidth,
     this.borderRadius,
     this.glowIntensity,
@@ -344,11 +344,14 @@ class _NovaButtonState extends State<NovaButton>
     }
   }
 
+  // Update the _startIdleAnimations() method to stop using repeat animation:
   void _startIdleAnimations() {
+    // Remove the controller.repeat(reverse: true) as it causes the pulsing effect
     if (widget.idleAnimations &&
         !widget.disabled &&
         widget.animationStyle != NovaAnimationStyle.none) {
-      _controller.repeat(reverse: true);
+      // We'll keep the timer for other animations but not pulse the button
+      _setupRepeatingAnimations();
     }
   }
 
@@ -579,21 +582,17 @@ class _NovaButtonState extends State<NovaButton>
                           effectiveGlowIntensity * 0.7,
                         ),
                         blurRadius:
-                            widget.pulseEffect
-                                ? 10.0 * _glowAnimation.value
-                                : (_isPressed
-                                    ? 15.0
-                                    : _isHovered
-                                    ? 10.0
-                                    : 5.0),
+                            _isPressed
+                                ? 15.0
+                                : _isHovered
+                                ? 10.0
+                                : 5.0,
                         spreadRadius:
-                            widget.pulseEffect
-                                ? 2.0 * _glowAnimation.value
-                                : (_isPressed
-                                    ? 3.0
-                                    : _isHovered
-                                    ? 2.0
-                                    : 0.0),
+                            _isPressed
+                                ? 3.0
+                                : _isHovered
+                                ? 2.0
+                                : 0.0,
                       ),
                     ],
                     border:
