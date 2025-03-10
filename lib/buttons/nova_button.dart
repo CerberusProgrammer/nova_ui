@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nova_ui/buttons/nova_animation_style.dart';
+import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -9,39 +11,6 @@ import 'package:nova_ui/effects/dash_border_painter.dart';
 import 'package:nova_ui/effects/scan_line_painter.dart';
 import 'package:nova_ui/effects/glitch_effect_painter.dart';
 import 'package:nova_ui/effects/circuit_pattern_painter.dart';
-
-/// Border style options for [NovaButton]
-enum NovaBorderStyle {
-  /// Solid border
-  solid,
-
-  /// Dashed border (animated)
-  dashed,
-
-  /// Double border
-  double,
-
-  /// Glowing border
-  glow,
-
-  /// No border
-  none,
-}
-
-/// Animation style for [NovaButton]
-enum NovaAnimationStyle {
-  /// Subtle animations
-  subtle,
-
-  /// Standard level of animations (default)
-  standard,
-
-  /// Dramatic, eye-catching animations
-  dramatic,
-
-  /// No animations
-  none,
-}
 
 /// A highly customizable retro-futuristic button for the NoVa UI design system.
 class NovaButton extends StatefulWidget {
@@ -151,10 +120,10 @@ class NovaButton extends StatefulWidget {
     this.pressAnimationDuration = const Duration(milliseconds: 150),
     this.hoverGlitch = true,
     this.hoverScanEffect = true,
-    this.textFlicker = true, // Enable text flicker by default
+    this.textFlicker = true,
     this.borderStyle = NovaBorderStyle.solid,
     this.animationStyle = NovaAnimationStyle.standard,
-    this.circuitPattern = true, // Enable circuit pattern by default
+    this.circuitPattern = true,
     this.animationSpeed = 1.0,
     this.textGlowIntensity = 1.0,
     this.foregroundColor,
@@ -162,7 +131,7 @@ class NovaButton extends StatefulWidget {
   });
 
   @override
-  _NovaButtonState createState() => _NovaButtonState();
+  State<NovaButton> createState() => _NovaButtonState();
 }
 
 class _NovaButtonState extends State<NovaButton>
@@ -170,12 +139,6 @@ class _NovaButtonState extends State<NovaButton>
   // Core animations
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  late Animation<double> _glowAnimation;
-  late Animation<double> _idlePulseAnimation;
-
-  // Secondary controllers for complex animations
-  late AnimationController _hoverController;
-
   // State tracking
   bool _isHovered = false;
   bool _isPressed = false;
@@ -217,28 +180,7 @@ class _NovaButtonState extends State<NovaButton>
       end: _getAnimationIntensity(0.95, 0.98, 0.92),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _glowAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 1.0,
-          end: _getAnimationIntensity(1.5, 1.3, 1.8),
-        ),
-        weight: 1,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: _getAnimationIntensity(1.5, 1.3, 1.8),
-          end: 1.0,
-        ),
-        weight: 1,
-      ),
-    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
     // For idle pulsing animations
-    _idlePulseAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.05), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: 1.05, end: 1.0), weight: 1),
-    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Start boot animation after small delay
     if (widget.bootAnimation) {
