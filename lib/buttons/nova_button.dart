@@ -290,9 +290,7 @@ class _NovaButtonState extends State<NovaButton>
     }
   }
 
-  // Update the _startIdleAnimations() method to stop using repeat animation:
   void _startIdleAnimations() {
-    // We'll keep the timer for other animations but not pulse the button
     if (widget.idleAnimations &&
         !widget.disabled &&
         widget.animationStyle != NovaAnimationStyle.none) {
@@ -385,6 +383,7 @@ class _NovaButtonState extends State<NovaButton>
     final double scanLineIntensity =
         themeColors['scanIntensity'] ?? novaTheme.scanLineIntensity;
 
+    // In your build method where the text is created:
     Widget contentWidget = Row(
       mainAxisSize: MainAxisSize.min,
       textDirection: widget.iconDirection,
@@ -405,27 +404,16 @@ class _NovaButtonState extends State<NovaButton>
             duration: Duration(milliseconds: 50),
             child: Text(
               widget.text.toUpperCase(),
-              style: TextStyle(
-                color: effectiveTextColor,
+              style: novaTheme.getButtonTextStyle(
+                textColor: effectiveTextColor,
                 fontSize: dimensions['fontSize'],
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
-                shadows: [
-                  Shadow(
-                    color: effectiveGlowColor.withOpacity(
-                      novaTheme.textGlowIntensity *
-                          widget.textGlowIntensity *
-                          _textGlowValue,
-                    ),
-                    blurRadius: 8.0,
-                  ),
-                ],
+                glowIntensity: widget.textGlowIntensity * _textGlowValue,
+                withGlow: true,
               ),
             ),
           ),
       ],
     );
-
     // Loading state
     if (widget.isLoading) {
       contentWidget = Stack(
