@@ -17,3 +17,20 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: ShareTechMono
+      fonts:
+        - asset: assets/fonts/ShareTechMono-Regular.ttf
+    
+    - family: VT323
+      fonts:
+        - asset: assets/fonts/VT323-Regular.ttf
+    
+    - family: Orbitron
+      fonts:
+        - asset: assets/fonts/Orbitron-VariableFont_wght.ttf
+
+    - family: MajorMonoDisplay
+      fonts:
+        - asset: assets/fonts/MajorMonoDisplay-Regular.ttf
