@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'package:nova_ui/buttons/nova_button.dart';
 import 'package:nova_ui/theme/nova_theme.dart';
 import 'package:nova_ui/theme/nova_theme_data.dart';
@@ -73,12 +74,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {},
                     hoverGlitch: true,
                     hoverScanEffect: true,
+                    borderRadius: 0,
                   ),
                   NovaButton(
                     text: "INITIALIZE",
                     onPressed: () {},
                     animationStyle: NovaAnimationStyle.dramatic,
                     scanLines: true,
+                    borderStyle: NovaBorderStyle.dashed,
                   ),
                   Wrap(
                     spacing: 10,
