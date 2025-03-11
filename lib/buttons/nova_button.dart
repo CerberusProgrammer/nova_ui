@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nova_ui/buttons/nova_animation_style.dart';
+import 'package:nova_ui/effects/nova_animation_style.dart';
 import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'dart:async';
 import 'dart:math' as math;
@@ -11,6 +11,7 @@ import 'package:nova_ui/effects/dash_border_painter.dart';
 import 'package:nova_ui/effects/scan_line_painter.dart';
 import 'package:nova_ui/effects/glitch_effect_painter.dart';
 import 'package:nova_ui/effects/circuit_pattern_painter.dart';
+import 'package:nova_ui/theme/nova_theme_provider.dart';
 
 /// A highly customizable retro-futuristic button for the NoVa UI design system.
 class NovaButton extends StatefulWidget {
@@ -180,8 +181,6 @@ class _NovaButtonState extends State<NovaButton>
       end: _getAnimationIntensity(0.95, 0.98, 0.92),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    // For idle pulsing animations
-
     // Start boot animation after small delay
     if (widget.bootAnimation) {
       Future.delayed(Duration(milliseconds: 100), () {
@@ -255,29 +254,34 @@ class _NovaButtonState extends State<NovaButton>
 
             // Update scan position for hover effect
             if (_isHovered && widget.hoverScanEffect) {
-              _scanPosition += 0.03 * widget.animationSpeed;
-              if (_scanPosition > 1.0) _scanPosition = 0.0;
+              _scanPosition =
+                  (_scanPosition + 0.05 * widget.animationSpeed) % 1.0;
             }
 
             // Text flicker effect (rare)
             if (widget.textFlicker && math.Random().nextDouble() > 0.98) {
               _textVisible = !_textVisible;
-              Future.delayed(Duration(milliseconds: 70), () {
-                if (mounted) setState(() => _textVisible = true);
-              });
+            } else {
+              _textVisible = true;
             }
 
             // Text glow pulsing (subtle)
             _textGlowValue =
-                1.0 +
-                math.sin(DateTime.now().millisecondsSinceEpoch / 500) * 0.2;
+                0.8 +
+                0.2 * math.sin(DateTime.now().millisecondsSinceEpoch / 1000);
 
             // Update circuit opacity for hover effect
             if (widget.circuitPattern) {
               if (_isHovered) {
-                _circuitOpacity = math.min(1.0, _circuitOpacity + 0.05);
+                _circuitOpacity = math.min(
+                  1.0,
+                  _circuitOpacity + 0.05 * widget.animationSpeed,
+                );
               } else {
-                _circuitOpacity = math.max(0.0, _circuitOpacity - 0.05);
+                _circuitOpacity = math.max(
+                  0.0,
+                  _circuitOpacity - 0.05 * widget.animationSpeed,
+                );
               }
             }
           });
@@ -288,11 +292,10 @@ class _NovaButtonState extends State<NovaButton>
 
   // Update the _startIdleAnimations() method to stop using repeat animation:
   void _startIdleAnimations() {
-    // Remove the controller.repeat(reverse: true) as it causes the pulsing effect
+    // We'll keep the timer for other animations but not pulse the button
     if (widget.idleAnimations &&
         !widget.disabled &&
         widget.animationStyle != NovaAnimationStyle.none) {
-      // We'll keep the timer for other animations but not pulse the button
       _setupRepeatingAnimations();
     }
   }
@@ -362,28 +365,37 @@ class _NovaButtonState extends State<NovaButton>
 
   @override
   Widget build(BuildContext context) {
-    final colors = getColorScheme(widget.style);
+    // Get the current theme from context
+    final novaTheme = context.novaTheme;
+
+    // Get button-specific colors from the theme based on style
+    final themeColors = novaTheme.getButtonColors(widget.style);
     final dimensions = getDimensions(widget.size, widget.borderRadius);
 
-    // Use custom colors if provided
-    final effectiveTextColor = widget.foregroundColor ?? colors['text'];
-    final effectiveGlowColor = colors['glow'];
+    // Use custom colors if provided, otherwise use theme colors
+    final effectiveTextColor = widget.foregroundColor ?? themeColors['text'];
+    final effectiveGlowColor = themeColors['glow'];
 
+    // Use custom background colors if provided, otherwise use theme colors
     final List<Color> backgroundColors =
         widget.backgroundColors ??
         [
-          colors['primary'] ?? Colors.blue,
-          colors['secondary'] ?? Colors.blue.shade800,
+          themeColors['primary'] ?? novaTheme.primary,
+          themeColors['secondary'] ?? novaTheme.secondary,
         ];
 
     // Calculate glow intensity based on state and configuration
     final double effectiveGlowIntensity =
         widget.glowIntensity ??
         (_isHovered
-            ? 0.8
+            ? novaTheme.glowIntensity * 1.3
             : _isPressed
-            ? 1.0
-            : 0.6);
+            ? novaTheme.glowIntensity * 1.5
+            : novaTheme.glowIntensity);
+
+    // Scan line intensity from theme
+    final double scanLineIntensity =
+        themeColors['scanIntensity'] ?? novaTheme.scanLineIntensity;
 
     // Button content with text/icon
     Widget contentWidget = Row(
@@ -413,9 +425,12 @@ class _NovaButtonState extends State<NovaButton>
                 letterSpacing: 1.2,
                 shadows: [
                   Shadow(
-                    blurRadius: 3.0 * widget.textGlowIntensity * _textGlowValue,
-                    color: effectiveGlowColor ?? Colors.blue.withOpacity(0.7),
-                    offset: Offset(0, 0),
+                    color: effectiveGlowColor.withOpacity(
+                      novaTheme.textGlowIntensity *
+                          widget.textGlowIntensity *
+                          _textGlowValue,
+                    ),
+                    blurRadius: 8.0,
                   ),
                 ],
               ),
@@ -510,58 +525,45 @@ class _NovaButtonState extends State<NovaButton>
                   width: dimensions['width'],
                   height: dimensions['height'],
                   decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: effectiveGlowColor.withOpacity(
+                          effectiveGlowIntensity *
+                              (_isHovered || _isPressed ? 0.5 : 0.3),
+                        ),
+                        blurRadius: _isHovered || _isPressed ? 15.0 : 10.0,
+                        spreadRadius: _isHovered || _isPressed ? 2.0 : 1.0,
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(
                       dimensions['borderRadius'],
                     ),
                     gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                       colors: backgroundColors,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: effectiveGlowColor.withOpacity(
-                          effectiveGlowIntensity * 0.7,
-                        ),
-                        blurRadius:
-                            _isPressed
-                                ? 15.0
-                                : _isHovered
-                                ? 10.0
-                                : 5.0,
-                        spreadRadius:
-                            _isPressed
-                                ? 3.0
-                                : _isHovered
-                                ? 2.0
-                                : 0.0,
-                      ),
-                    ],
-                    border:
-                        widget.borderStyle != NovaBorderStyle.dashed
-                            ? buttonBorder
-                            : null,
+                    border: buttonBorder,
                   ),
                   child: Opacity(
                     opacity: widget.disabled ? 0.5 : 1.0,
                     child: Stack(
                       children: [
-                        // Circuit pattern background (appears on hover)
+                        // Circuit pattern background (if enabled)
                         if (widget.circuitPattern)
                           Positioned.fill(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                dimensions['borderRadius'],
-                              ),
-                              child: AnimatedOpacity(
-                                opacity: _circuitOpacity * 0.2,
-                                duration: Duration(milliseconds: 200),
+                            child: AnimatedOpacity(
+                              opacity: _circuitOpacity * 0.15,
+                              duration: Duration(milliseconds: 300),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  dimensions['borderRadius'] -
+                                      (widget.borderWidth ?? 2.0),
+                                ),
                                 child: CustomPaint(
                                   painter: CircuitPatternPainter(
-                                    color:
-                                        effectiveTextColor?.withOpacity(0.4) ??
-                                        Colors.white.withOpacity(0.4),
-                                    patternDensity: 15,
+                                    color: effectiveTextColor.withOpacity(0.5),
+                                    patternDensity: 8,
                                   ),
                                 ),
                               ),
@@ -573,51 +575,87 @@ class _NovaButtonState extends State<NovaButton>
                           Positioned.fill(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(
-                                dimensions['borderRadius'],
+                                dimensions['borderRadius'] -
+                                    (widget.borderWidth ?? 2.0),
                               ),
                               child: CustomPaint(
                                 painter: ScanLinePainter(
-                                  intensity: colors['scanIntensity'] ?? 0.08,
+                                  intensity: scanLineIntensity,
                                 ),
                               ),
                             ),
                           ),
 
-                        // Dashed border effect (animated)
+                        // Hover scan effect (horizontal scanning line)
+                        if (_isHovered && widget.hoverScanEffect)
+                          Positioned.fill(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                dimensions['borderRadius'] -
+                                    (widget.borderWidth ?? 2.0),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: [
+                                      _scanPosition - 0.05,
+                                      _scanPosition,
+                                      _scanPosition + 0.05,
+                                    ],
+                                    colors: [
+                                      Colors.transparent,
+                                      effectiveTextColor.withOpacity(0.15),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        // Animated dashed border (if selected)
                         if (widget.borderStyle == NovaBorderStyle.dashed)
                           Positioned.fill(
                             child: CustomPaint(
                               painter: DashedBorderPainter(
                                 color:
                                     _isHovered
-                                        ? effectiveTextColor ?? Colors.white
+                                        ? effectiveTextColor
                                         : backgroundColors[0],
                                 strokeWidth: widget.borderWidth ?? 2.0,
-                                dashPattern: [8, 4],
+                                dashPattern: [5, 3],
                                 dashOffset: _dashOffsets,
                                 borderRadius: dimensions['borderRadius'],
                               ),
                             ),
                           ),
 
-                        // Hover scan effect (horizontal line that travels up/down)
-                        if (_isHovered && widget.hoverScanEffect && !_isPressed)
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top: dimensions['height'] * _scanPosition - 1,
+                        // Glowing border (if selected)
+                        if (widget.borderStyle == NovaBorderStyle.glow)
+                          Positioned.fill(
                             child: Container(
-                              height: 2,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.transparent,
-                                    effectiveTextColor?.withOpacity(0.7) ??
-                                        Colors.white.withOpacity(0.7),
-                                    Colors.transparent,
-                                  ],
-                                  stops: [0.0, 0.5, 1.0],
+                                borderRadius: BorderRadius.circular(
+                                  dimensions['borderRadius'],
                                 ),
+                                border: Border.all(
+                                  color: effectiveTextColor.withOpacity(
+                                    _isHovered ? 0.8 : 0.5,
+                                  ),
+                                  width: widget.borderWidth ?? 2.0,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: effectiveTextColor.withOpacity(
+                                      (_isHovered ? 0.4 : 0.2) *
+                                          effectiveGlowIntensity,
+                                    ),
+                                    blurRadius: 8.0,
+                                    spreadRadius: 1.0,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -626,10 +664,7 @@ class _NovaButtonState extends State<NovaButton>
                         Center(child: contentWidget),
 
                         // Hover glitch effect
-                        if (_isHovered &&
-                            !_isPressed &&
-                            widget.hoverGlitch &&
-                            !widget.disabled)
+                        if (_isHovered && widget.hoverGlitch)
                           Positioned.fill(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(
