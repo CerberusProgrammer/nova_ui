@@ -24,6 +24,8 @@ class NovaThemeData {
     textGlowIntensity: 0.3,
     patternColor: Color(0xFF50E3C2),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.terminal,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Cyberpunk theme - Neon purples and blues with high contrast
@@ -46,6 +48,8 @@ class NovaThemeData {
     textGlowIntensity: 0.5,
     patternColor: Color(0xFF01CDFE),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.scifi,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Holographic theme - Blue-white transparent effects
@@ -68,6 +72,8 @@ class NovaThemeData {
     textGlowIntensity: 0.6,
     patternColor: Color(0xFF88CCFF),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.futureDisplay,
+    secondaryFontFamily: NovaFontFamily.system,
   );
 
   /// Amber monochrome theme - Vintage computing aesthetic
@@ -90,6 +96,8 @@ class NovaThemeData {
     textGlowIntensity: 0.2,
     patternColor: Color(0xFFB38545),
     brightness: Brightness.light,
+    primaryFontFamily: NovaFontFamily.pixel,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Matrix theme - Digital green aesthetic
@@ -112,6 +120,8 @@ class NovaThemeData {
     textGlowIntensity: 0.6,
     patternColor: Color(0xFF00FF41),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.terminal,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Alert theme - Red/amber emergency system look
@@ -134,6 +144,8 @@ class NovaThemeData {
     textGlowIntensity: 0.4,
     patternColor: Color(0xFFFF5A5F),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.arcade,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Tron theme - Blue glow on dark aesthetic
@@ -156,6 +168,8 @@ class NovaThemeData {
     textGlowIntensity: 0.7,
     patternColor: Color(0xFF05D9E8),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.scifi,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Synthwave theme - Purple/pink/blue vibrant sunset aesthetic
@@ -178,6 +192,8 @@ class NovaThemeData {
     textGlowIntensity: 0.6,
     patternColor: Color(0xFFF72585),
     brightness: Brightness.dark,
+    primaryFontFamily: NovaFontFamily.futureDisplay,
+    secondaryFontFamily: NovaFontFamily.terminal,
   );
 
   /// Neo-brutalism theme - High contrast with bold colors
