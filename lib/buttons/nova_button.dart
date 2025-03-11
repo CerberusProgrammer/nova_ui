@@ -112,8 +112,8 @@ class NovaButton extends StatefulWidget {
     this.soundEffects = false,
     this.bootAnimation = true,
     this.idleAnimations = true,
-    this.borderWidth,
-    this.borderRadius,
+    this.borderWidth = 2,
+    this.borderRadius = 0,
     this.glowIntensity,
     this.iconDirection = TextDirection.ltr,
     this.iconSpacing = 8.0,
@@ -122,7 +122,7 @@ class NovaButton extends StatefulWidget {
     this.hoverGlitch = true,
     this.hoverScanEffect = true,
     this.textFlicker = true,
-    this.borderStyle = NovaBorderStyle.solid,
+    this.borderStyle = NovaBorderStyle.none,
     this.animationStyle = NovaAnimationStyle.standard,
     this.circuitPattern = true,
     this.animationSpeed = 1.0,
@@ -310,16 +310,12 @@ class _NovaButtonState extends State<NovaButton>
   void _playClickSound() {
     if (widget.soundEffects && !widget.disabled) {
       HapticFeedback.lightImpact();
-      // In a real implementation, you would play an actual sound here
-      // using something like the audioplayers package
     }
   }
 
   void _playHoverSound() {
     if (widget.soundEffects && !widget.disabled) {
       HapticFeedback.selectionClick();
-      // In a real implementation, you would play an actual sound here
-      // using something like the audioplayers package
     }
   }
 
@@ -365,18 +361,12 @@ class _NovaButtonState extends State<NovaButton>
 
   @override
   Widget build(BuildContext context) {
-    // Get the current theme from context
     final novaTheme = context.novaTheme;
-
-    // Get button-specific colors from the theme based on style
     final themeColors = novaTheme.getButtonColors(widget.style);
     final dimensions = getDimensions(widget.size, widget.borderRadius);
-
-    // Use custom colors if provided, otherwise use theme colors
     final effectiveTextColor = widget.foregroundColor ?? themeColors['text'];
     final effectiveGlowColor = themeColors['glow'];
 
-    // Use custom background colors if provided, otherwise use theme colors
     final List<Color> backgroundColors =
         widget.backgroundColors ??
         [
@@ -384,7 +374,6 @@ class _NovaButtonState extends State<NovaButton>
           themeColors['secondary'] ?? novaTheme.secondary,
         ];
 
-    // Calculate glow intensity based on state and configuration
     final double effectiveGlowIntensity =
         widget.glowIntensity ??
         (_isHovered
@@ -393,11 +382,9 @@ class _NovaButtonState extends State<NovaButton>
             ? novaTheme.glowIntensity * 1.5
             : novaTheme.glowIntensity);
 
-    // Scan line intensity from theme
     final double scanLineIntensity =
         themeColors['scanIntensity'] ?? novaTheme.scanLineIntensity;
 
-    // Button content with text/icon
     Widget contentWidget = Row(
       mainAxisSize: MainAxisSize.min,
       textDirection: widget.iconDirection,
