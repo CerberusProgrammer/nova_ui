@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'package:nova_ui/buttons/nova_button.dart';
+import 'package:nova_ui/buttons/nova_button_style.dart';
 import 'package:nova_ui/buttons/nova_icon_button.dart';
+import 'package:nova_ui/effects/nova_bar_loading_effect.dart';
+import 'package:nova_ui/loaders/nova_bar_progress.dart';
 import 'package:nova_ui/theme/nova_theme.dart';
 import 'package:nova_ui/theme/nova_theme_data.dart';
 import 'package:nova_ui/theme/nova_theme_provider.dart';
@@ -41,11 +45,58 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _currentTheme = NovaThemeData.terminal;
+  bool _isLoading = false;
+  double _progressValue = 0.0;
+  Timer? _progressTimer;
+  String _loadingText = "System initializing...";
 
   void _changeTheme(NovaTheme newTheme) {
     setState(() {
       _currentTheme = newTheme;
     });
+  }
+
+  void _startLoading() {
+    _progressTimer?.cancel();
+
+    setState(() {
+      _isLoading = true;
+      _progressValue = 0.0;
+      _loadingText = "System initializing...";
+    });
+
+    _progressTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      setState(() {
+        _progressValue += 0.01;
+
+        if (_progressValue < 0.3) {
+          _loadingText = "System initializing...";
+        } else if (_progressValue < 0.6) {
+          _loadingText = "Loading core modules...";
+        } else if (_progressValue < 0.9) {
+          _loadingText = "Configuring subsystems...";
+        } else {
+          _loadingText = "System ready";
+        }
+
+        if (_progressValue >= 1.0) {
+          _progressValue = 0.0;
+        }
+      });
+    });
+  }
+
+  void _stopLoading() {
+    _progressTimer?.cancel();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _progressTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -67,17 +118,44 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             body: Center(
               child: Column(
-                spacing: 20,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   NovaButton(text: "LAUNCH", onPressed: () {}),
+                  SizedBox(height: 20),
                   NovaIconButton(icon: Icons.play_arrow, onPressed: () {}),
+                  SizedBox(height: 20),
                   NovaButton(
-                    text: "INITIALIZE",
-                    onPressed: () {},
+                    text: _isLoading ? "CANCEL" : "INITIALIZE",
+                    onPressed: () {
+                      if (_isLoading) {
+                        _stopLoading();
+                      } else {
+                        _startLoading();
+                      }
+                    },
                     animationStyle: NovaAnimationStyle.dramatic,
                     borderStyle: NovaBorderStyle.dashed,
+                    style:
+                        _isLoading
+                            ? NovaButtonStyle.alert
+                            : NovaButtonStyle.terminal,
                   ),
+                  SizedBox(height: 30),
+                  NovaBarProgress(
+                    value: _progressValue,
+                    barCount: 20,
+                    height: 20.0,
+                    barSpacing: 2.0,
+                    animationDuration: Duration(milliseconds: 300),
+                    loadingEffect: NovaBarLoadingEffect.terminal,
+                    textLabel: _loadingText,
+                    showPercentage: true,
+                    scanLines: true,
+                    borderStyle: NovaBorderStyle.solid,
+                    glitchEffect: true,
+                    barThickness: 0.7,
+                  ),
+                  SizedBox(height: 30),
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
