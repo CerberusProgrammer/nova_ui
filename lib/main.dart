@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'package:nova_ui/buttons/nova_button.dart';
+import 'package:nova_ui/buttons/nova_icon_button.dart';
 import 'package:nova_ui/theme/nova_theme.dart';
 import 'package:nova_ui/theme/nova_theme_data.dart';
 import 'package:nova_ui/theme/nova_theme_provider.dart';
@@ -69,18 +70,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 spacing: 20,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  NovaButton(
-                    text: "LAUNCH",
-                    onPressed: () {},
-                    hoverGlitch: true,
-                    hoverScanEffect: true,
-                    borderRadius: 0,
-                  ),
+                  NovaButton(text: "LAUNCH", onPressed: () {}),
+                  NovaIconButton(icon: Icons.play_arrow, onPressed: () {}),
                   NovaButton(
                     text: "INITIALIZE",
                     onPressed: () {},
                     animationStyle: NovaAnimationStyle.dramatic,
-                    scanLines: true,
                     borderStyle: NovaBorderStyle.dashed,
                   ),
                   Wrap(
