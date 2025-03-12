@@ -107,7 +107,6 @@ class NovaTheme {
     this.secondaryFontFamily = NovaFontFamily.system,
   });
 
-  /// Get the actual font family name based on NovaFontFamily enum
   String getFontFamily(NovaFontFamily fontFamily) {
     switch (fontFamily) {
       case NovaFontFamily.terminal:
@@ -121,12 +120,10 @@ class NovaTheme {
       case NovaFontFamily.futureDisplay:
         return 'MajorMonoDisplay';
       case NovaFontFamily.system:
-      default:
-        return ''; // Uses system default
+        return '';
     }
   }
 
-  /// Get text style with appropriate font and styling for headings
   TextStyle getHeadingStyle({
     double? fontSize,
     FontWeight fontWeight = FontWeight.bold,
@@ -151,7 +148,6 @@ class NovaTheme {
     );
   }
 
-  /// Get text style with appropriate font and styling for body text
   TextStyle getBodyStyle({
     double? fontSize,
     FontWeight fontWeight = FontWeight.normal,
@@ -166,7 +162,6 @@ class NovaTheme {
     );
   }
 
-  /// Get text style for buttons
   TextStyle getButtonTextStyle({
     required Color textColor,
     double? fontSize,
