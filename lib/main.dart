@@ -4,7 +4,6 @@ import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'package:nova_ui/buttons/nova_button.dart';
 import 'package:nova_ui/buttons/nova_button_style.dart';
 import 'package:nova_ui/buttons/nova_icon_button.dart';
-import 'package:nova_ui/effects/nova_bar_loading_effect.dart';
 import 'package:nova_ui/loaders/nova_bar_progress.dart';
 import 'package:nova_ui/theme/nova_theme.dart';
 import 'package:nova_ui/theme/nova_theme_data.dart';
@@ -143,17 +142,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 30),
                   NovaBarProgress(
                     value: _progressValue,
-                    barCount: 20,
-                    height: 20.0,
-                    barSpacing: 2.0,
                     animationDuration: Duration(milliseconds: 300),
-                    loadingEffect: NovaBarLoadingEffect.terminal,
                     textLabel: _loadingText,
                     showPercentage: true,
                     scanLines: true,
                     borderStyle: NovaBorderStyle.solid,
                     glitchEffect: true,
-                    barThickness: 0.7,
                   ),
                   SizedBox(height: 30),
                   Wrap(
