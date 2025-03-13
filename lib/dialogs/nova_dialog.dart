@@ -196,12 +196,12 @@ class _NovaDialogState extends State<NovaDialog>
   bool _hasBooted = false;
   Timer? _animationTimer;
   double _circuitOpacity = 0.0;
-  List<double> _dashOffsets = [0, 0];
+  final List<double> _dashOffsets = [0, 0];
   bool _titleVisible = true;
   double _scanPosition = 0.0;
   int _displayTextLength = 0;
   bool _isAnimatingText = false;
-  List<double> _emergencyLightIntensity = [0.0, 0.0, 0.0];
+  final List<double> _emergencyLightIntensity = [0.0, 0.0, 0.0];
   double _glitchProbability = 0.0;
   late AnimationController _entranceController;
   late Animation<double> _entranceAnimation;
