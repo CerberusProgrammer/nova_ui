@@ -4,6 +4,7 @@ import 'package:nova_ui/buttons/nova_border_style.dart';
 import 'package:nova_ui/buttons/nova_button.dart';
 import 'package:nova_ui/buttons/nova_button_style.dart';
 import 'package:nova_ui/buttons/nova_icon_button.dart';
+import 'package:nova_ui/dialogs/nova_dialog.dart';
 import 'package:nova_ui/loaders/nova_bar_progress.dart';
 import 'package:nova_ui/theme/nova_theme.dart';
 import 'package:nova_ui/theme/nova_theme_data.dart';
@@ -119,7 +120,16 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  NovaButton(text: "LAUNCH", onPressed: () {}),
+                  NovaButton(
+                    text: "LAUNCH",
+                    onPressed:
+                        () => NovaDialog.show(
+                          context: context,
+                          title: 'System Alert',
+                          onConfirm: () => Navigator.of(context).pop(true),
+                          onCancel: () => Navigator.of(context).pop(false),
+                        ),
+                  ),
                   SizedBox(height: 20),
                   NovaIconButton(icon: Icons.play_arrow, onPressed: () {}),
                   SizedBox(height: 20),
