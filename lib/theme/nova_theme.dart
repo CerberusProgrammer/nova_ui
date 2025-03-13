@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nova_ui/buttons/nova_button_style.dart';
+import 'package:nova_ui/theme/nova_theme_data.dart';
 
 enum NovaFontFamily {
   /// System default font
@@ -199,7 +200,6 @@ class NovaTheme {
     }
   }
 
-  /// Get text style with appropriate font and styling for headings
   TextStyle getHeadingStyle({
     double? fontSize,
     FontWeight fontWeight = FontWeight.bold,
@@ -224,7 +224,6 @@ class NovaTheme {
     );
   }
 
-  /// Get text style with appropriate font and styling for body text
   TextStyle getBodyStyle({
     double? fontSize,
     FontWeight fontWeight = FontWeight.normal,
@@ -239,7 +238,6 @@ class NovaTheme {
     );
   }
 
-  /// Get text style for buttons
   TextStyle getButtonTextStyle({
     required Color textColor,
     double? fontSize,
@@ -264,6 +262,38 @@ class NovaTheme {
               ]
               : null,
     );
+  }
+
+  NovaButtonStyle getButtonStyleByCurrentNovaTheme(NovaTheme theme) {
+    if (theme == NovaThemeData.terminal) {
+      return NovaButtonStyle.terminal;
+    } else if (theme == NovaThemeData.cyberpunk) {
+      return NovaButtonStyle.neon;
+    } else if (theme == NovaThemeData.hologram) {
+      return NovaButtonStyle.hologram;
+    } else if (theme == NovaThemeData.amber) {
+      return NovaButtonStyle.amber;
+    } else if (theme == NovaThemeData.matrix) {
+      return NovaButtonStyle.matrix;
+    } else if (theme == NovaThemeData.alert) {
+      return NovaButtonStyle.alert;
+    } else if (theme == NovaThemeData.tron) {
+      return NovaButtonStyle.tron;
+    } else if (theme == NovaThemeData.synthwave) {
+      return NovaButtonStyle.warning;
+    } else {
+      return NovaButtonStyle.terminal;
+    }
+  }
+
+  Map<String, dynamic> getButtonColorsByCurrentNovaTheme(NovaTheme theme) {
+    return {
+      'primary': theme.primary,
+      'secondary': theme.secondary,
+      'text': theme.textPrimary,
+      'glow': theme.glow.withAlpha((0.3 * 255).toInt()),
+      'scanIntensity': theme.scanLineIntensity,
+    };
   }
 
   Map<String, dynamic> getButtonColors(NovaButtonStyle style) {
