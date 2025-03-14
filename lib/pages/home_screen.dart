@@ -11,6 +11,7 @@ class HomeScreen extends StatelessWidget {
 
     return NovaScaffold(
       title: 'Nova UI Demo',
+      digitalNoise: true,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Center(

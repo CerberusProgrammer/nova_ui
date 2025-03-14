@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:nova_ui/components/buttons/nova_border_style.dart';
+import 'package:nova_ui/components/scaffold/nova_appbar.dart';
 import 'package:nova_ui/components/theme/nova_theme.dart';
-import 'package:nova_ui/components/theme/nova_theme_data.dart';
 import 'package:nova_ui/components/theme/nova_theme_provider.dart';
-import 'package:nova_ui/components/theme/theme_service.dart';
-import 'package:nova_ui/config/app_routes.dart';
+import 'package:nova_ui/components/scaffold/nova_drawer.dart';
+import 'package:nova_ui/components/scaffold/nova_footer.dart';
+import 'package:nova_ui/components/scaffold/nova_boot_screen.dart';
+import 'package:nova_ui/components/scaffold/decorations/nova_angle_painter.dart';
+import 'package:nova_ui/components/scaffold/decorations/nova_circuit_painter.dart';
+import 'package:nova_ui/components/scaffold/decorations/nova_hexagon_painter.dart';
+import 'package:nova_ui/components/scaffold/decorations/nova_noise_painter.dart';
 
-class NovaScaffold extends StatelessWidget {
+class NovaScaffold extends StatefulWidget {
   final String title;
   final Widget body;
   final List<Widget>? actions;
   final Widget? floatingActionButton;
+  final bool showHeader;
+  final bool showFooter;
+  final bool scanLines;
+  final bool circuitPattern;
+  final NovaBorderStyle borderStyle;
+  final double borderWidth;
+  final double glowIntensity;
+  final bool showAngleDecoration;
+  final bool showFrameLines;
+  final bool bootAnimation;
+  final bool hexagonalPattern;
+  final bool digitalNoise;
+  final bool pulseEffect;
 
   const NovaScaffold({
     super.key,
@@ -17,196 +36,309 @@ class NovaScaffold extends StatelessWidget {
     required this.body,
     this.actions,
     this.floatingActionButton,
+    this.showHeader = true,
+    this.showFooter = true,
+    this.scanLines = true,
+    this.circuitPattern = false,
+    this.borderStyle = NovaBorderStyle.glow,
+    this.borderWidth = 2.0,
+    this.glowIntensity = 0.7,
+    this.showAngleDecoration = true,
+    this.showFrameLines = true,
+    this.bootAnimation = false,
+    this.hexagonalPattern = false,
+    this.digitalNoise = false,
+    this.pulseEffect = false,
   });
+
+  @override
+  State<NovaScaffold> createState() => _NovaScaffoldState();
+}
+
+class _NovaScaffoldState extends State<NovaScaffold>
+    with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late AnimationController _animController;
+  double _bootProgress = 0.0;
+  bool _isBooted = false;
+  int _statusLineIndex = 0;
+  final List<String> _bootMessages = [
+    "INITIALIZING SYSTEM...",
+    "LOADING MODULES...",
+    "CONFIGURING INTERFACE...",
+    "CALIBRATING DISPLAY...",
+    "SYNCHRONIZING DATA...",
+    "SYSTEM READY",
+  ];
+  double _pulseValue = 0.0;
+  bool _showNoise = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    if (widget.bootAnimation) {
+      _runBootSequence();
+    } else {
+      _isBooted = true;
+    }
+
+    if (widget.pulseEffect || widget.digitalNoise) {
+      _startVisualEffects();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  void _startVisualEffects() {
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        setState(() {
+          _pulseValue = widget.pulseEffect ? (_pulseValue + 0.02) % 1.0 : 0.0;
+          _showNoise = widget.digitalNoise ? !_showNoise : false;
+        });
+        _startVisualEffects();
+      }
+    });
+  }
+
+  void _runBootSequence() {
+    Future.delayed(Duration.zero, () {
+      setState(() => _bootProgress = 0.0);
+      _startBootAnimation();
+    });
+  }
+
+  void _startBootAnimation() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_bootProgress < 1.0) {
+        setState(() {
+          _bootProgress += 0.02;
+          if (_bootProgress > _statusLineIndex * 0.2 &&
+              _statusLineIndex < _bootMessages.length - 1) {
+            _statusLineIndex++;
+          }
+        });
+        _startBootAnimation();
+      } else {
+        setState(() => _isBooted = true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final novaTheme = context.novaTheme;
 
-    return Scaffold(
-      backgroundColor: novaTheme.background,
-      appBar: AppBar(
-        backgroundColor: novaTheme.surface,
-        title: Text(
-          title,
-          style: TextStyle(
-            color: novaTheme.textPrimary,
-            fontFamily: novaTheme.getFontFamily(novaTheme.primaryFontFamily),
-          ),
-        ),
-        iconTheme: IconThemeData(color: novaTheme.textPrimary),
-        actions: actions,
-      ),
-      drawer: _buildDrawer(context, novaTheme),
-      body: body,
-      floatingActionButton: floatingActionButton,
-    );
-  }
+    if (!_isBooted) {
+      return NovaBootScreen(
+        bootProgress: _bootProgress,
+        statusMessage: _bootMessages[_statusLineIndex],
+      );
+    }
 
-  Drawer _buildDrawer(BuildContext context, NovaTheme theme) {
-    return Drawer(
-      backgroundColor: theme.surface,
-      child: ListView(
-        padding: EdgeInsets.zero,
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: Colors.transparent,
+      drawer: NovaDrawer(showCircuitPattern: widget.circuitPattern),
+      body: Stack(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: theme.primary,
-              boxShadow: [
-                BoxShadow(
-                  color: theme.glow.withAlpha(
-                    ((theme.glowIntensity * 0.5) * 255).toInt(),
+          Container(color: novaTheme.background),
+
+          _buildBackgroundDecorations(novaTheme),
+
+          Column(
+            children: [
+              if (widget.showHeader)
+                NovaAppBar(
+                  title: widget.title,
+                  actions: widget.actions,
+                  glowIntensity: widget.glowIntensity,
+                  onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                ),
+
+              if (widget.showFrameLines)
+                Container(height: widget.borderWidth, color: novaTheme.primary),
+
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: _getBodyDecoration(novaTheme),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: Stack(
+                      children: [
+                        widget.body,
+
+                        if (widget.showAngleDecoration)
+                          ..._buildCornerDecorations(novaTheme),
+                      ],
+                    ),
                   ),
-                  blurRadius: 10,
-                  spreadRadius: 2,
                 ),
-              ],
+              ),
+
+              if (widget.showFrameLines)
+                Container(height: widget.borderWidth, color: novaTheme.primary),
+
+              if (widget.showFooter) NovaFooter(),
+            ],
+          ),
+
+          if (widget.floatingActionButton != null)
+            Positioned(
+              right: 16,
+              bottom: widget.showFooter ? 50 : 16,
+              child: widget.floatingActionButton!,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'NOVA UI',
-                  style: theme.getHeadingStyle(fontSize: 28, withGlow: true),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Component Library',
-                  style: theme.getBodyStyle(fontSize: 16),
-                ),
-                const Spacer(),
-                Text('Version 0.1.0', style: theme.getBodyStyle(fontSize: 12)),
-              ],
-            ),
-          ),
-          _buildNavigationItem(
-            context: context,
-            icon: Icons.home,
-            title: 'Home',
-            route: AppRoutes.home,
-            theme: theme,
-          ),
-          _buildNavigationItem(
-            context: context,
-            icon: Icons.smart_button,
-            title: 'Buttons',
-            route: AppRoutes.buttons,
-            theme: theme,
-          ),
-          _buildNavigationItem(
-            context: context,
-            icon: Icons.chat_bubble,
-            title: 'Dialogs',
-            route: AppRoutes.dialogs,
-            theme: theme,
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('THEMES', style: theme.getHeadingStyle(fontSize: 16)),
-          ),
-          _buildThemeSelectionGrid(context, theme),
         ],
       ),
     );
   }
 
-  Widget _buildNavigationItem({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required String route,
-    required NovaTheme theme,
-  }) {
-    final currentRoute = ModalRoute.of(context)?.settings.name;
-    final isSelected = currentRoute == route;
+  Widget _buildBackgroundDecorations(NovaTheme theme) {
+    return Stack(
+      children: [
+        if (widget.circuitPattern)
+          IgnorePointer(
+            child: Opacity(
+              opacity: 0.06,
+              child: CustomPaint(
+                painter: NovaCircuitPainter(
+                  color: theme.patternColor,
+                  density: 0.7 + _pulseValue * 0.3,
+                ),
+                child: Container(),
+              ),
+            ),
+          ),
 
-    return ListTile(
-      leading: Icon(icon, color: isSelected ? theme.accent : theme.textPrimary),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: isSelected ? theme.accent : theme.textPrimary,
-          fontFamily: theme.getFontFamily(theme.secondaryFontFamily),
-        ),
-      ),
-      tileColor: isSelected ? theme.primary.withOpacity(0.2) : null,
-      onTap: () {
-        if (currentRoute != route) {
-          Navigator.pushReplacementNamed(context, route);
-        } else {
-          Navigator.pop(context);
-        }
-      },
+        if (widget.hexagonalPattern)
+          IgnorePointer(
+            child: Opacity(
+              opacity: 0.04,
+              child: CustomPaint(
+                painter: NovaHexagonPainter(color: theme.patternColor),
+                child: Container(),
+              ),
+            ),
+          ),
+
+        if (widget.digitalNoise && _showNoise)
+          IgnorePointer(
+            child: CustomPaint(
+              painter: NovaNoisePainter(
+                color: theme.textPrimary,
+                opacity: 0.03,
+              ),
+              child: Container(),
+            ),
+          ),
+      ],
     );
   }
 
-  Widget _buildThemeSelectionGrid(
-    BuildContext context,
-    NovaTheme currentTheme,
-  ) {
-    final themes = [
-      {'theme': NovaThemeData.terminal, 'name': 'Terminal'},
-      {'theme': NovaThemeData.cyberpunk, 'name': 'Cyberpunk'},
-      {'theme': NovaThemeData.hologram, 'name': 'Hologram'},
-      {'theme': NovaThemeData.amber, 'name': 'Amber'},
-      {'theme': NovaThemeData.matrix, 'name': 'Matrix'},
-      {'theme': NovaThemeData.alert, 'name': 'Alert'},
-      {'theme': NovaThemeData.tron, 'name': 'Tron'},
-      {'theme': NovaThemeData.synthwave, 'name': 'Synthwave'},
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children:
-            themes.map((themeData) {
-              final theme = themeData['theme'] as NovaTheme;
-              final name = themeData['name'] as String;
-              final isSelected = currentTheme == theme;
-
-              return GestureDetector(
-                onTap: () {
-                  ThemeService.changeTheme(context, theme);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 80,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: theme.primary,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                      color: isSelected ? theme.accent : Colors.transparent,
-                      width: 2,
-                    ),
-                    boxShadow:
-                        isSelected
-                            ? [
-                              BoxShadow(
-                                color: theme.glow.withOpacity(0.5),
-                                blurRadius: 8,
-                                spreadRadius: 1,
-                              ),
-                            ]
-                            : null,
-                  ),
-                  child: Center(
-                    child: Text(
-                      name.substring(0, 3),
-                      style: TextStyle(
-                        color: theme.textPrimary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
+  List<Widget> _buildCornerDecorations(NovaTheme theme) {
+    return [
+      Positioned(
+        left: 0,
+        top: 0,
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CustomPaint(painter: NovaAnglePainter(color: theme.primary)),
+        ),
       ),
+      Positioned(
+        right: 0,
+        top: 0,
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationY(3.14159),
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CustomPaint(painter: NovaAnglePainter(color: theme.primary)),
+          ),
+        ),
+      ),
+      Positioned(
+        left: 0,
+        bottom: 0,
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationX(3.14159),
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CustomPaint(painter: NovaAnglePainter(color: theme.primary)),
+          ),
+        ),
+      ),
+      Positioned(
+        right: 0,
+        bottom: 0,
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationZ(3.14159),
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CustomPaint(painter: NovaAnglePainter(color: theme.primary)),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  BoxDecoration _getBodyDecoration(NovaTheme theme) {
+    BoxBorder? border;
+
+    switch (widget.borderStyle) {
+      case NovaBorderStyle.solid:
+        border = Border.all(color: theme.primary, width: widget.borderWidth);
+        break;
+      case NovaBorderStyle.double:
+        border = Border(
+          top: BorderSide(color: theme.primary, width: widget.borderWidth),
+          left: BorderSide(color: theme.primary, width: widget.borderWidth),
+          right: BorderSide(color: theme.secondary, width: widget.borderWidth),
+          bottom: BorderSide(color: theme.secondary, width: widget.borderWidth),
+        );
+        break;
+      case NovaBorderStyle.glow:
+        border = Border.all(
+          color: theme.glow.withOpacity(0.8),
+          width: widget.borderWidth,
+        );
+        break;
+      case NovaBorderStyle.dashed:
+      case NovaBorderStyle.none:
+        border = null;
+        break;
+    }
+
+    return BoxDecoration(
+      color: theme.background,
+      border: border,
+      boxShadow:
+          widget.borderStyle == NovaBorderStyle.glow
+              ? [
+                BoxShadow(
+                  color: theme.glow.withOpacity(widget.glowIntensity * 0.3),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                ),
+              ]
+              : null,
     );
   }
 }

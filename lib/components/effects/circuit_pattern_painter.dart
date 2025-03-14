@@ -15,9 +15,8 @@ class CircuitPatternPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.0;
 
-    final random = math.Random(42); // Fixed seed for consistent pattern
+    final random = math.Random(42);
 
-    // Create nodes
     final nodes = <Offset>[];
     for (int i = 0; i < patternDensity; i++) {
       nodes.add(
@@ -28,24 +27,19 @@ class CircuitPatternPainter extends CustomPainter {
       );
     }
 
-    // Draw circuit lines
     for (int i = 0; i < nodes.length; i++) {
-      // Connect each node to 1-3 other nodes
       final connections = 1 + random.nextInt(2);
       for (int j = 0; j < connections; j++) {
         final targetIndex =
             (i + 1 + random.nextInt(nodes.length - 1)) % nodes.length;
 
-        // Draw path with kinks/angles like a circuit
         final path = Path();
         path.moveTo(nodes[i].dx, nodes[i].dy);
 
         if (random.nextBool()) {
-          // Horizontal then vertical
           path.lineTo(nodes[targetIndex].dx, nodes[i].dy);
           path.lineTo(nodes[targetIndex].dx, nodes[targetIndex].dy);
         } else {
-          // Vertical then horizontal
           path.lineTo(nodes[i].dx, nodes[targetIndex].dy);
           path.lineTo(nodes[targetIndex].dx, nodes[targetIndex].dy);
         }
@@ -53,7 +47,6 @@ class CircuitPatternPainter extends CustomPainter {
         canvas.drawPath(path, paint);
       }
 
-      // Draw node points
       canvas.drawCircle(nodes[i], 1.5, paint);
     }
   }

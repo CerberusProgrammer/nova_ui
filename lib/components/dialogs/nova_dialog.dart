@@ -95,7 +95,6 @@ class NovaDialog extends StatefulWidget {
     bool barrierDismissible = true,
     double? width,
     double? height,
-    // Use theme-aware button styles by default
     NovaButtonStyle? confirmButtonStyle,
     NovaButtonStyle? cancelButtonStyle,
     bool scanLines = true,
@@ -222,17 +221,14 @@ class _NovaDialogState extends State<NovaDialog>
       curve: widget.bootAnimation ? Curves.easeOutBack : Curves.easeOutCirc,
     );
 
-    // Start entrance animation
     _entranceController.forward();
 
-    // Start boot animation if enabled
     if (widget.bootAnimation) {
       Future.delayed(Duration(milliseconds: 100), () {
         if (mounted) {
           setState(() => _hasBooted = true);
           _startIdleAnimations();
 
-          // Start typewriter animation if enabled
           if (widget.typewriterAnimation && widget.message != null) {
             _startTypewriterAnimation();
           } else {
@@ -253,22 +249,18 @@ class _NovaDialogState extends State<NovaDialog>
       _animationTimer = Timer.periodic(Duration(milliseconds: 50), (_) {
         if (mounted) {
           setState(() {
-            // Update border dash pattern for animated borders
             _dashOffsets[0] -= 0.5 * widget.animationSpeed;
             _dashOffsets[1] += 0.3 * widget.animationSpeed;
 
-            // Update scan position for scan line effect
             _scanPosition =
                 (_scanPosition + 0.03 * widget.animationSpeed) % 1.0;
 
-            // Title flicker effect (rare)
             if (widget.titleFlicker && math.Random().nextDouble() > 0.98) {
               _titleVisible = !_titleVisible;
             } else {
               _titleVisible = true;
             }
 
-            // Circuit pattern visibility
             if (widget.circuitPattern) {
               _circuitOpacity = math.min(
                 1.0,
@@ -276,10 +268,8 @@ class _NovaDialogState extends State<NovaDialog>
               );
             }
 
-            // Emergency lights animation (for alert style)
             if (widget.emergencyLights) {
               for (int i = 0; i < _emergencyLightIntensity.length; i++) {
-                // Alternate flashing pattern
                 if (i == DateTime.now().millisecondsSinceEpoch ~/ 500 % 3) {
                   _emergencyLightIntensity[i] = math.min(
                     1.0,
@@ -294,7 +284,6 @@ class _NovaDialogState extends State<NovaDialog>
               }
             }
 
-            // Manage glitch probability over time for occasional effects
             if (widget.glitchEffect) {}
           });
         }
@@ -306,7 +295,6 @@ class _NovaDialogState extends State<NovaDialog>
     _isAnimatingText = true;
     _displayTextLength = 0;
 
-    // Animate the text typing character by character
     Timer.periodic(Duration(milliseconds: (50 ~/ widget.animationSpeed)), (
       timer,
     ) {
@@ -319,7 +307,6 @@ class _NovaDialogState extends State<NovaDialog>
         if (_displayTextLength < (widget.message?.length ?? 0)) {
           _displayTextLength++;
 
-          // Play typing sound occasionally
           if (widget.soundEffects && math.Random().nextDouble() > 0.7) {
             HapticFeedback.selectionClick();
           }
@@ -552,13 +539,11 @@ class _NovaDialogState extends State<NovaDialog>
                         ),
                       ),
 
-                    // Título y contenido
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Encabezado con título e icono
                           Row(
                             children: [
                               if (widget.icon != null)
@@ -604,7 +589,6 @@ class _NovaDialogState extends State<NovaDialog>
 
                           SizedBox(height: 16),
 
-                          // Contenido del diálogo
                           widget.content ??
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -619,7 +603,6 @@ class _NovaDialogState extends State<NovaDialog>
                       ),
                     ),
 
-                    // Espacio para los botones
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
@@ -653,7 +636,6 @@ class _NovaDialogState extends State<NovaDialog>
                   ],
                 ),
 
-                // Horizontal scan effect
                 if (widget.scanLines)
                   Positioned(
                     left: 0,
