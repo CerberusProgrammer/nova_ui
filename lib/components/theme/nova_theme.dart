@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nova_ui/buttons/nova_button_style.dart';
-import 'package:nova_ui/theme/nova_theme_data.dart';
+import 'package:nova_ui/components/buttons/nova_button_style.dart';
+import 'package:nova_ui/components/theme/nova_theme_data.dart';
 
 enum NovaFontFamily {
   /// System default font

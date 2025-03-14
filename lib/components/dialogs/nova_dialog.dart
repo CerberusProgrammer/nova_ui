@@ -3,15 +3,15 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nova_ui/buttons/nova_border_style.dart';
-import 'package:nova_ui/buttons/nova_button.dart';
-import 'package:nova_ui/buttons/nova_button_size.dart';
-import 'package:nova_ui/buttons/nova_button_style.dart';
-import 'package:nova_ui/effects/nova_animation_style.dart';
-import 'package:nova_ui/effects/circuit_pattern_painter.dart';
-import 'package:nova_ui/effects/dash_border_painter.dart';
-import 'package:nova_ui/effects/scan_line_painter.dart';
-import 'package:nova_ui/theme/nova_theme_provider.dart';
+import 'package:nova_ui/components/buttons/nova_border_style.dart';
+import 'package:nova_ui/components/buttons/nova_button.dart';
+import 'package:nova_ui/components/buttons/nova_button_size.dart';
+import 'package:nova_ui/components/buttons/nova_button_style.dart';
+import 'package:nova_ui/components/effects/nova_animation_style.dart';
+import 'package:nova_ui/components/effects/circuit_pattern_painter.dart';
+import 'package:nova_ui/components/effects/dash_border_painter.dart';
+import 'package:nova_ui/components/effects/scan_line_painter.dart';
+import 'package:nova_ui/components/theme/nova_theme_provider.dart';
 
 class NovaDialog extends StatefulWidget {
   final String title;

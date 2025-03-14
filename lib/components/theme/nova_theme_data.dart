@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nova_ui/theme/nova_theme.dart';
+import 'package:nova_ui/components/theme/nova_theme.dart';
 
 /// Contains pre-defined retro-futuristic theme presets for Nova UI
 class NovaThemeData {

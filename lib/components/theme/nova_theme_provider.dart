@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nova_ui/theme/nova_theme.dart';
-import 'package:nova_ui/theme/nova_theme_data.dart';
+import 'package:nova_ui/components/theme/nova_theme.dart';
+import 'package:nova_ui/components/theme/nova_theme_data.dart';
 
 /// Provider for NovaTheme that can be accessed throughout the app
 class NovaThemeProvider extends InheritedWidget {
