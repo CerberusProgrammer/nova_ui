@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nova_ui/components/buttons/nova_button.dart';
-import 'package:nova_ui/components/buttons/nova_button_style.dart';
 import 'package:nova_ui/components/theme/nova_theme.dart';
 import 'package:nova_ui/components/theme/nova_theme_data.dart';
 import 'package:nova_ui/components/theme/nova_theme_provider.dart';
@@ -14,12 +12,12 @@ class NovaScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
 
   const NovaScaffold({
-    Key? key,
+    super.key,
     required this.title,
     required this.body,
     this.actions,
     this.floatingActionButton,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +54,9 @@ class NovaScaffold extends StatelessWidget {
               color: theme.primary,
               boxShadow: [
                 BoxShadow(
-                  color: theme.glow.withOpacity(theme.glowIntensity * 0.5),
+                  color: theme.glow.withAlpha(
+                    ((theme.glowIntensity * 0.5) * 255).toInt(),
+                  ),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),

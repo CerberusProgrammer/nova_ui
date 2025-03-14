@@ -199,20 +199,21 @@ class DialogsScreen extends StatelessWidget {
     String themeName = 'Current';
     if (theme == NovaThemeData.terminal) {
       themeName = 'Terminal';
-    } else if (theme == NovaThemeData.cyberpunk)
+    } else if (theme == NovaThemeData.cyberpunk) {
       themeName = 'Cyberpunk';
-    else if (theme == NovaThemeData.hologram)
+    } else if (theme == NovaThemeData.hologram) {
       themeName = 'Hologram';
-    else if (theme == NovaThemeData.amber)
+    } else if (theme == NovaThemeData.amber) {
       themeName = 'Amber';
-    else if (theme == NovaThemeData.matrix)
+    } else if (theme == NovaThemeData.matrix) {
       themeName = 'Matrix';
-    else if (theme == NovaThemeData.alert)
+    } else if (theme == NovaThemeData.alert) {
       themeName = 'Alert';
-    else if (theme == NovaThemeData.tron)
+    } else if (theme == NovaThemeData.tron) {
       themeName = 'Tron';
-    else if (theme == NovaThemeData.synthwave)
+    } else if (theme == NovaThemeData.synthwave) {
       themeName = 'Synthwave';
+    }
 
     NovaDialog.show(
       context: context,

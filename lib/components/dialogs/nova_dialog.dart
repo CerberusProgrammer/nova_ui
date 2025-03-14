@@ -136,7 +136,7 @@ class NovaDialog extends StatefulWidget {
 
     final effectiveBackgroundColors =
         backgroundColors ??
-        [novaTheme.surface, novaTheme.surface.withOpacity(0.9)];
+        [novaTheme.surface, novaTheme.surface.withAlpha((0.9 * 255).toInt())];
 
     final effectiveTitleColor = titleColor ?? novaTheme.textPrimary;
 
@@ -147,7 +147,7 @@ class NovaDialog extends StatefulWidget {
     return showDialog<bool>(
       context: context,
       barrierDismissible: barrierDismissible,
-      barrierColor: Colors.black.withOpacity(0.7),
+      barrierColor: Colors.black.withAlpha((0.7 * 255).toInt()),
       builder: (BuildContext context) {
         return NovaDialog(
           title: title,
@@ -202,7 +202,6 @@ class _NovaDialogState extends State<NovaDialog>
   int _displayTextLength = 0;
   bool _isAnimatingText = false;
   final List<double> _emergencyLightIntensity = [0.0, 0.0, 0.0];
-  double _glitchProbability = 0.0;
   late AnimationController _entranceController;
   late Animation<double> _entranceAnimation;
 
@@ -296,11 +295,7 @@ class _NovaDialogState extends State<NovaDialog>
             }
 
             // Manage glitch probability over time for occasional effects
-            if (widget.glitchEffect) {
-              _glitchProbability =
-                  0.03 +
-                  0.05 * math.sin(DateTime.now().millisecondsSinceEpoch / 1000);
-            }
+            if (widget.glitchEffect) {}
           });
         }
       });
@@ -351,7 +346,7 @@ class _NovaDialogState extends State<NovaDialog>
     final effectiveGlowColor = themeColors['glow'] ?? novaTheme.glow;
     final List<Color> backgroundColors =
         widget.backgroundColors ??
-        [novaTheme.surface, novaTheme.surface.withOpacity(0.9)];
+        [novaTheme.surface, novaTheme.surface.withAlpha((0.9 * 255).toInt())];
 
     final double effectiveGlowIntensity =
         widget.glowIntensity ?? (_hasBooted ? novaTheme.glowIntensity : 0.0);

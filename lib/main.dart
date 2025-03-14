@@ -3,7 +3,6 @@ import 'package:nova_ui/components/theme/nova_theme_data.dart';
 import 'package:nova_ui/components/theme/nova_theme_provider.dart';
 import 'package:nova_ui/components/theme/theme_service.dart';
 import 'package:nova_ui/config/app_routes.dart';
-import 'package:nova_ui/pages/home_screen.dart';
 
 void main() {
   runApp(const MainApp());
