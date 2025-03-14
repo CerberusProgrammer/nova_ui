@@ -12,16 +12,15 @@ class ScanLinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final random = math.Random(42);
 
-    // Strong CRT screen curvature effect (pronounced vignette)
     final vignetteRect = Rect.fromLTRB(0, 0, size.width, size.height);
     final vignetteGradient = RadialGradient(
       center: Alignment.center,
-      radius: 1.0, // Smaller radius for more pronounced effect
+      radius: 1.0,
       colors: [
         Colors.transparent,
-        Colors.black.withOpacity(intensity * 1.5), // Stronger vignette
+        Colors.black.withAlpha(((intensity * 1.5) * 255).toInt()),
       ],
-      stops: const [0.6, 1.0], // Move edge closer to center
+      stops: const [0.6, 1.0],
     );
 
     final vignettePaint =
@@ -31,39 +30,34 @@ class ScanLinePainter extends CustomPainter {
 
     canvas.drawRect(vignetteRect, vignettePaint);
 
-    // Calculate refresh line position (moving scan line)
     final timeDiff = DateTime.now().difference(_startTime).inMilliseconds;
-    final scanPosition =
-        (timeDiff % 2000) / 2000; // Complete cycle every 2 seconds
+    final scanPosition = (timeDiff % 2000) / 2000;
     final refreshLineY = size.height * scanPosition;
 
-    // Horizontal scan lines (more visible)
     final scanLinePaint =
         Paint()
-          ..color = Colors.white.withOpacity(intensity * 1.2)
+          ..color = Colors.white.withAlpha(((intensity * 1.2) * 255).toInt())
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.0;
 
-    // Draw prominent horizontal scan lines (alternating opacity)
     for (double y = 0; y < size.height; y += 2) {
-      // Make alternating lines more/less visible
       final lineOpacity = y % 4 == 0 ? intensity * 0.8 : intensity * 0.4;
 
-      scanLinePaint.color = Colors.white.withOpacity(lineOpacity);
+      scanLinePaint.color = Colors.white.withAlpha((lineOpacity * 255).toInt());
       canvas.drawLine(Offset(0, y), Offset(size.width, y), scanLinePaint);
     }
 
-    // Add RGB color separation/fringing effect at edges (chromatic aberration)
-    final leftEdge = size.width * 0.05; // 5% from left
-    final rightEdge = size.width * 0.95; // 5% from right
+    final leftEdge = size.width * 0.05;
+    final rightEdge = size.width * 0.95;
 
     final rgbSeparationPaint =
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.0;
 
-    // Red channel shift
-    rgbSeparationPaint.color = Colors.red.withOpacity(intensity * 0.5);
+    rgbSeparationPaint.color = Colors.red.withAlpha(
+      ((intensity * 0.5) * 255).toInt(),
+    );
     canvas.drawRect(
       Rect.fromLTRB(leftEdge - 1, 0, rightEdge - 1, size.height),
       rgbSeparationPaint,
