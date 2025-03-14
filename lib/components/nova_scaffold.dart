@@ -170,9 +170,7 @@ class NovaScaffold extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   ThemeService.changeTheme(context, theme);
-                  Navigator.pop(
-                    context,
-                  ); // Cerrar drawer después de cambiar tema
+                  Navigator.pop(context);
                 },
                 child: Container(
                   width: 80,
@@ -197,7 +195,7 @@ class NovaScaffold extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      name.substring(0, 3), // Tres primeras letras
+                      name.substring(0, 3),
                       style: TextStyle(
                         color: theme.textPrimary,
                         fontWeight: FontWeight.bold,
