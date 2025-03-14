@@ -36,7 +36,6 @@ class _MainAppState extends State<MainApp> {
         initialRoute: AppRoutes.home,
         navigatorKey: ThemeService.navigatorKey,
         builder: (context, child) {
-          // Wrapper para proporcionar acceso al tema desde cualquier lugar
           return ThemeService(
             currentTheme: _currentTheme,
             onThemeChanged: (newTheme) {

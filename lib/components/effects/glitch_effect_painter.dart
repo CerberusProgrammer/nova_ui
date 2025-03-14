@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-// Modify the GlitchPainter to support different intensity levels
 class GlitchPainter extends CustomPainter {
   final bool isHover;
   final Color? textColor;
@@ -12,18 +11,17 @@ class GlitchPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final random = math.Random();
 
-    // Use reduced intensity for hover effect
     final baseOpacity = isHover ? 0.03 : 0.08;
     final effectCount = isHover ? 6 : 10;
 
-    // Horizontal distortion lines
     final distortionPaint =
         Paint()
-          ..color = Colors.white.withOpacity(isHover ? 0.05 : 0.15)
+          ..color = Colors.white.withAlpha(
+            ((isHover ? 0.05 : 0.15) * 255).toInt(),
+          )
           ..style = PaintingStyle.stroke
           ..strokeWidth = isHover ? 0.8 : 1.5;
 
-    // Fewer distortion lines on hover, more on press
     final lineCount = isHover ? 2 : 5;
 
     for (int i = 0; i < lineCount; i++) {
@@ -37,15 +35,11 @@ class GlitchPainter extends CustomPainter {
       );
     }
 
-    // Digital artifacts (blocky rectangles)
     final glitchPaint = Paint()..style = PaintingStyle.fill;
 
-    // Draw random glitch rectangles
     for (int i = 0; i < effectCount; i++) {
-      // Subtler color for hover
-      glitchPaint.color = Colors.white.withOpacity(baseOpacity);
+      glitchPaint.color = Colors.white.withAlpha((baseOpacity * 255).toInt());
 
-      // Smaller artifacts on hover
       final width = random.nextDouble() * (isHover ? 10 : 20) + 5;
       final height = random.nextDouble() * (isHover ? 1 : 2) + 1;
 
@@ -58,11 +52,10 @@ class GlitchPainter extends CustomPainter {
       canvas.drawRect(rect, glitchPaint);
     }
 
-    // Occasional vertical glitch bars only on press (not on hover)
     if (!isHover && random.nextBool()) {
       final verticalGlitchPaint =
           Paint()
-            ..color = Colors.white.withOpacity(0.1)
+            ..color = Colors.white.withAlpha((0.1 * 255).toInt())
             ..style = PaintingStyle.fill;
 
       final xPos = random.nextDouble() * size.width;
@@ -74,7 +67,6 @@ class GlitchPainter extends CustomPainter {
       );
     }
 
-    // Rare animated distortion only on press
     if (!isHover && random.nextDouble() > 0.8) {
       final timeBased = DateTime.now().millisecondsSinceEpoch % 1000 / 1000;
       final distortY = size.height * timeBased;
@@ -83,7 +75,7 @@ class GlitchPainter extends CustomPainter {
         Offset(0, distortY),
         Offset(size.width, distortY + random.nextDouble() * 4 - 2),
         Paint()
-          ..color = Colors.white.withOpacity(0.2)
+          ..color = Colors.white.withAlpha((0.2 * 255).toInt())
           ..strokeWidth = 2,
       );
     }

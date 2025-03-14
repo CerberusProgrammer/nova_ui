@@ -314,14 +314,15 @@ class _NovaBarProgressState extends State<NovaBarProgress>
 
     final effectiveActiveColor = widget.activeColor ?? novaTheme.primary;
     final effectiveInactiveColor =
-        widget.inactiveColor ?? novaTheme.divider.withOpacity(0.3);
+        widget.inactiveColor ??
+        novaTheme.divider.withAlpha((0.3 * 255).toInt());
 
     final effectiveGlowIntensity =
         widget.glowIntensity ?? novaTheme.glowIntensity;
 
     final List<Color> backgroundColors =
         widget.backgroundColors ??
-        [novaTheme.surface.withOpacity(0.8), novaTheme.surface];
+        [novaTheme.surface.withAlpha((0.8 * 255).toInt()), novaTheme.surface];
 
     BoxBorder? containerBorder;
     switch (widget.borderStyle) {
@@ -342,11 +343,11 @@ class _NovaBarProgressState extends State<NovaBarProgress>
             width: widget.borderWidth ?? 2.0,
           ),
           right: BorderSide(
-            color: novaTheme.divider.withOpacity(0.7),
+            color: novaTheme.divider.withAlpha((0.7 * 255).toInt()),
             width: widget.borderWidth ?? 2.0,
           ),
           bottom: BorderSide(
-            color: novaTheme.divider.withOpacity(0.7),
+            color: novaTheme.divider.withAlpha((0.7 * 255).toInt()),
             width: widget.borderWidth ?? 2.0,
           ),
         );
@@ -356,7 +357,7 @@ class _NovaBarProgressState extends State<NovaBarProgress>
         break;
       case NovaBorderStyle.glow:
         containerBorder = Border.all(
-          color: novaTheme.glow.withOpacity(0.5),
+          color: novaTheme.glow.withAlpha((0.5 * 255).toInt()),
           width: widget.borderWidth ?? 2.0,
         );
         break;
@@ -411,8 +412,8 @@ class _NovaBarProgressState extends State<NovaBarProgress>
                 widget.borderStyle == NovaBorderStyle.glow
                     ? [
                       BoxShadow(
-                        color: novaTheme.glow.withOpacity(
-                          effectiveGlowIntensity * 0.3,
+                        color: novaTheme.glow.withAlpha(
+                          (effectiveGlowIntensity * 0.3 * 255).toInt(),
                         ),
                         blurRadius: 8.0,
                         spreadRadius: 1.0,
@@ -483,8 +484,11 @@ class _NovaBarProgressState extends State<NovaBarProgress>
                                         ? [
                                           BoxShadow(
                                             color: effectiveActiveColor
-                                                .withOpacity(
-                                                  effectiveGlowIntensity * 0.3,
+                                                .withAlpha(
+                                                  (effectiveGlowIntensity *
+                                                          0.3 *
+                                                          255)
+                                                      .toInt(),
                                                 ),
                                             blurRadius: 4.0,
                                             spreadRadius:
@@ -526,7 +530,7 @@ class _NovaBarProgressState extends State<NovaBarProgress>
                         gradient: LinearGradient(
                           colors: [
                             Colors.transparent,
-                            novaTheme.glow.withOpacity(0.2),
+                            novaTheme.glow.withAlpha((0.2 * 255).toInt()),
                             Colors.transparent,
                           ],
                           begin: Alignment.topCenter,

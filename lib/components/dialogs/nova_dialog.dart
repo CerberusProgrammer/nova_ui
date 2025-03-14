@@ -449,7 +449,9 @@ class _NovaDialogState extends State<NovaDialog>
                         ),
                         child: CustomPaint(
                           painter: CircuitPatternPainter(
-                            color: novaTheme.primary.withOpacity(0.5),
+                            color: novaTheme.primary.withAlpha(
+                              (0.5 * 255).toInt(),
+                            ),
                             patternDensity: 12,
                           ),
                         ),
@@ -479,13 +481,15 @@ class _NovaDialogState extends State<NovaDialog>
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                color: novaTheme.error.withOpacity(
-                                  _emergencyLightIntensity[i] * 0.8,
+                                color: novaTheme.error.withAlpha(
+                                  (_emergencyLightIntensity[i] * 0.8 * 255)
+                                      .toInt(),
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: novaTheme.error.withOpacity(
-                                      _emergencyLightIntensity[i] * 0.6,
+                                    color: novaTheme.error.withAlpha(
+                                      (_emergencyLightIntensity[i] * 0.6 * 255)
+                                          .toInt(),
                                     ),
                                     blurRadius: 8,
                                     spreadRadius: 2,
