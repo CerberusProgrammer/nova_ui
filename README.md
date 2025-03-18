@@ -6,7 +6,7 @@
 
 **NoVa UI** is not just another Flutter design system - it's a time machine that brings the aesthetics of retro-futuristic interfaces into modern app development! ✨
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/nova_ui?style=social)](https://github.com/yourusername/nova_ui)
+[![GitHub stars](https://img.shields.io/github/stars/cerberusprogrammer/nova_ui?style=social)](https://github.com/cerberusprogrammer/nova_ui)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Flutter](https://img.shields.io/badge/Flutter-Powered-blue?logo=flutter)](https://flutter.dev)
 
