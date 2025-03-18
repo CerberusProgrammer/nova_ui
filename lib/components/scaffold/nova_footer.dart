@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nova_ui/components/theme/nova_theme.dart';
 import 'package:nova_ui/components/theme/nova_theme_provider.dart';
 
 class NovaFooter extends StatelessWidget {
