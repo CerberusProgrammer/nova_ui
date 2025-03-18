@@ -27,8 +27,9 @@ class NovaHexagonPainter extends CustomPainter {
         if (centerX < 0 ||
             centerX > canvasSize.width ||
             centerY < 0 ||
-            centerY > canvasSize.height)
+            centerY > canvasSize.height) {
           continue;
+        }
 
         final path = Path();
         for (int i = 0; i < 6; i++) {

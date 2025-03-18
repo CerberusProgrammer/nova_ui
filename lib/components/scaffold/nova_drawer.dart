@@ -9,8 +9,7 @@ import 'package:nova_ui/components/scaffold/decorations/nova_circuit_painter.dar
 class NovaDrawer extends StatelessWidget {
   final bool showCircuitPattern;
 
-  const NovaDrawer({Key? key, this.showCircuitPattern = true})
-    : super(key: key);
+  const NovaDrawer({super.key, this.showCircuitPattern = true});
 
   @override
   Widget build(BuildContext context) {

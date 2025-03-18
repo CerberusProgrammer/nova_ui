@@ -7,10 +7,10 @@ class NovaBootScreen extends StatelessWidget {
   final String statusMessage;
 
   const NovaBootScreen({
-    Key? key,
+    super.key,
     required this.bootProgress,
     required this.statusMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

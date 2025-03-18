@@ -5,8 +5,7 @@ import 'package:nova_ui/components/theme/nova_theme_provider.dart';
 class NovaFooter extends StatelessWidget {
   final String? statusText;
 
-  const NovaFooter({Key? key, this.statusText = "SYSTEM NOMINAL"})
-    : super(key: key);
+  const NovaFooter({super.key, this.statusText = "SYSTEM NOMINAL"});
 
   @override
   Widget build(BuildContext context) {

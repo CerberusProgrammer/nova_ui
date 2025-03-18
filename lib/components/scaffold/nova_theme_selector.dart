@@ -6,8 +6,7 @@ import 'package:nova_ui/components/theme/theme_service.dart';
 class NovaThemeSelector extends StatelessWidget {
   final NovaTheme currentTheme;
 
-  const NovaThemeSelector({Key? key, required this.currentTheme})
-    : super(key: key);
+  const NovaThemeSelector({super.key, required this.currentTheme});
 
   @override
   Widget build(BuildContext context) {
