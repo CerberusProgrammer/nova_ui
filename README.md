@@ -134,15 +134,6 @@ This means you can use it freely in personal and commercial projects! 🎉
 
 ---
 
-## 🔗 Links & Resources 🔗
-
-- [Documentation](https://nova-ui.docs)
-- [Example Gallery](https://nova-ui.examples)
-- [Discord Community](https://discord.gg/nova-ui)
-- [Twitter](https://twitter.com/nova_ui)
-
----
-
 <p align="center">
   <img src="https://via.placeholder.com/150/0a192f/ffffff?text=NoVa" alt="NoVa Logo" width="150">
   <br>
