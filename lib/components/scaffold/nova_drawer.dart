@@ -113,6 +113,14 @@ class NovaDrawer extends StatelessWidget {
             route: AppRoutes.dialogs,
             theme: theme,
           ),
+
+          _buildNavigationItem(
+            context: context,
+            icon: Icons.speed,
+            title: 'Progress',
+            route: AppRoutes.progress,
+            theme: theme,
+          ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.all(16.0),
