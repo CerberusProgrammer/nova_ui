@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nova_ui/components/miscellaneous/nova_code_breaker.dart';
+import 'package:nova_ui/components/miscellaneous/nova_cyber_node.dart';
+import 'package:nova_ui/components/miscellaneous/nova_power_core.dart';
 import 'package:nova_ui/components/miscellaneous/nova_system_monitor.dart';
 import 'package:nova_ui/components/miscellaneous/nova_terminal.dart';
 import 'package:nova_ui/components/miscellaneous/radar/nova_radar.dart';
@@ -44,6 +47,9 @@ class HomeScreen extends StatelessWidget {
                 title: 'Animated',
                 description: 'Built-in animations and effects',
               ),
+              NovaCodeBreaker(),
+              NovaCyberNode(),
+              NovaPowerCore(),
               NovaRadar(),
               NovaWaveform(),
               NovaTerminal(lines: ["hola", "como estas"]),
